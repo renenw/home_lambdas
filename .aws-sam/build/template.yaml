@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'home-apis
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  RsgFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: RsgFunction
+      Handler: app.lambda_handler
+      Runtime: ruby2.7
+      Policies:
+      - VPCAccessPolicy: {}
+      Events:
+        Rsg:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+Outputs:
+  Api:
+    Description: API Gateway endpoint URL for Prod stage for function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/check/
+  Function:
+    Description: Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - RsgFunction
+      - Arn
+  FunctionIamRole:
+    Description: Implicit IAM Role created for function
+    Value:
+      Fn::GetAtt:
+      - RsgFunctionRole
+      - Arn

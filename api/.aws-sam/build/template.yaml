@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'home-apis
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ApiFunction
+      Handler: app.lambda_handler
+      Runtime: ruby2.7
+      Policies:
+      - VPCAccessPolicy: {}
+      - SSMParameterReadPolicy:
+          ParameterName: PUSHER_CHANNEL
+      - SSMParameterReadPolicy:
+          ParameterName: HOME_NGINX_API_KEY
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+Outputs:
+  Api:
+    Description: API Gateway endpoint URL for Prod stage for function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/check/
+  Function:
+    Description: Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - ApiFunction
+      - Arn
+  FunctionIamRole:
+    Description: Implicit IAM Role created for function
+    Value:
+      Fn::GetAtt:
+      - ApiFunctionRole
+      - Arn

@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "event-handler"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1w4bztqyd1r4f"
+s3_prefix = "event-handler"
+region = "eu-west-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
